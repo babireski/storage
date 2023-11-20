@@ -7,6 +7,6 @@
 # Commands
 
 + `delete [file]`
-+ `download` [file] [folder]`
++ `download [file] [folder]`
 + `list`
 + `upload [file]`
