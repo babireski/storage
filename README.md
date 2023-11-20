@@ -4,8 +4,8 @@
 
 # Usage
 
-+ `--client` or `-c`: run application as server
-+ `--server` or `-s`: run application as client
++ `--client` or `-c`: run application as client
++ `--server` or `-s`: run application as server
 
 # Commands
 
