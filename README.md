@@ -6,7 +6,7 @@
 
 # Commands
 
-    + delete [file]
-    + download [file] [folder]
-    + list
-    + upload [file]
++ `delete` [file]
++ `download` [file] [folder]
++ `list`
++ `upload` [file]
