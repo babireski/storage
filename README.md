@@ -10,9 +10,11 @@
 + `server`: run application as server
     + `--path` or `-p`: set storage path
 
-# Commands
+# Documentation
 
 + `delete [file]`
 + `download [file] [folder]`
++ `exit`
++ `help`
 + `list`
 + `upload [file]`
