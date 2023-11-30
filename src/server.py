@@ -10,12 +10,12 @@ class Server:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def __str__(self):
-        return self.host + ":" + self.port
+        return self.host + ':' + self.port
 
     def start(self):
         try:
             self.socket.bind((self.host, self.port))
             self.socket.listen(5)
-            print("Server started on " + self)
+            print('Server started on ' + self)
         except socket.error as e:
-            print("Failed to start the server: ", e)
+            print('Failed to start the server: ', e)
