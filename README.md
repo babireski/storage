@@ -2,10 +2,12 @@
 
 # Installing
 
-# Usage
+# Commands
 
-+ `--client` or `-c`: run application as client
-+ `--server` or `-s`: run application as server
++ `client`: run application as client
+    + `--address` or `-a`: connect by address
+    + `--broadcast` or `-b`: search for online servers locally
++ `server`: run application as server
 
 # Commands
 
