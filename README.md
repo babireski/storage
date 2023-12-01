@@ -18,3 +18,8 @@
 + `help`
 + `list`
 + `upload [file]`
+
+# Tasklist
+
++ [ ] Authentication
++ [ ] Logging
