@@ -1,20 +1,18 @@
 import typer
-
 from server import Server
 from client import Client
-from path import Path
 
 application = typer.Typer()
 
 @application.command()
-def server(host = "127.0.0.1", port = 50000, path = Path("data/")):
-    server = Server(host, port, path)
-    server.start()
+def server(host: str = "127.0.0.1", port: int = 50000, path: str = "data/"):
+    server_instance = Server(host, port, path)
+    server_instance.start()
 
 @application.command()
-def client(host = "127.0.0.1", port = 50000):
-    client = Client(host, port)
-    client.connect()
+def client(host: str = "127.0.0.1", port: int = 50000):
+    client_instance = Client(host, port)
+    client_instance.connect()
 
 if __name__ == "__main__":
     application()
