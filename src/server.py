@@ -50,24 +50,24 @@ class Server:
             if client_socket.fileno() != -1:
                 client_socket.close()
 
-    def execute_command(self, client_socket, cmd):
+    def execute_command(self, client, cmd):
         if cmd == "list":
             print('List requested.')
-            client_socket.send(self.storage.list().encode())
+            client.send(self.storage.list().encode())
 
         elif cmd == "upload":
-            print('Upload requested')
-            client_socket.send('Upload functionality to be implemented.'.encode())
+            print('Upload requested.')
+            client.send('Upload functionality to be implemented.\n'.encode())
             pass
 
         elif cmd == "download":
-            print('Download requested')
-            client_socket.send('Download functionality to be implemented.'.encode())
+            print('Download requested.')
+            client.send('Download functionality to be implemented\n.'.encode())
             pass
 
         elif cmd == "delete":
-            print('Delete requested')
-            client_socket.send('Delete functionality to be implemented.'.encode())
+            print('Delete requested.')
+            client.send('Delete functionality to be implemented.\n'.encode())
             pass
 
     def stop(self):

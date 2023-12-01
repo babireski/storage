@@ -2,7 +2,7 @@ client:
 	@python ./src/application.py client
 
 server:
-	@python ./src/application.py server
+	@python ./src/application.py server --path ../files
 
 setup:
 	@pip install -r requirements.txt

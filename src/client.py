@@ -18,7 +18,7 @@ class Client:
     def start_interaction(self):
         try:
             while True:
-                questions = [inquirer.List('command', message = "Choose a command", choices = ['list', 'upload', 'download', 'delete', 'exit'])]
+                questions = [inquirer.List('command', message = 'Choose a command', choices = ['list', 'upload', 'download', 'delete', 'exit'])]
                 answers = inquirer.prompt(questions)
 
                 if not answers:

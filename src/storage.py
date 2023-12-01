@@ -9,12 +9,12 @@ class Storage:
         self.updateFileList()
 
     def updateFileList(self):
-        self.filesList = os.listdir(self.path)
+        self.files = os.listdir(self.path)
 
     def list(self):
-        if self.filesList:
-            return ", ".join(self.filesList)
-        return "Storage is empty"
+        if self.files:
+            return '\n'.join(self.files) + '\n'
+        return 'Storage is empty.\n'
 
     def upload(self, file):
         filepath = os.path.join(self.path, file.name + '.' + file.extension) if file.extension else os.path.join(self.path, file.name)
