@@ -11,22 +11,22 @@ class Server:
         self.connections = []
 
     def __str__(self):
-        return f'{self.host}:{self.port}'
+        return '{}:{}'.format(self.host, self.port)
 
     def start(self):
         try:
             self.socket.bind((self.host, self.port))
             self.socket.listen(5)
-            print('Server started on ' + str(self))
+            print('Server started on {}'.format(str(self)))
 
             while True:
                 client_socket, client_address = self.socket.accept()
-                print(f"Connection established with {client_address}")
+                print('Connection established with {}'.format(client_address))
 
-                client_thread = threading.Thread(target=self.handle_client, args=(client_socket,))
-                client_thread.start()
+                thread = threading.Thread(target = self.handle_client, arg = (client_socket))
+                thread.start()
 
-                self.connections.append(client_thread)
+                self.connections.append(thread)
 
         except socket.error as e:
             print('Failed to start the server: ', e)
