@@ -23,7 +23,7 @@ class Server:
                 client_socket, client_address = self.socket.accept()
                 print('Connection established with {}'.format(client_address))
 
-                thread = threading.Thread(target = self.handle_client, arg = (client_socket))
+                thread = threading.Thread(target = self.handle_client, args = (client_socket,))
                 thread.start()
 
                 self.connections.append(thread)
