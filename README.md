@@ -6,7 +6,7 @@
 
 + `client`: run application as client
     + `--address` or `-a`: connect by address
-    + `--broadcast` or `-b`: search for online servers locally
+    + `--find` or `-f`: search for online servers locally
 + `server`: run application as server
     + `--path` or `-p`: set storage path
 
