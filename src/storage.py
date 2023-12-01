@@ -1,11 +1,10 @@
 import os
 
 class Storage:
-    def __init__(self, path: str):
-        if not os.path.exists(path):
-            os.makedirs(path)
-
-        self.path = path
+    def __init__(self, path):
+        if not os.path.exists(path.path):
+            os.makedirs(path.path)
+        self.path = path.path
         self.updateFileList()
 
     def updateFileList(self):
