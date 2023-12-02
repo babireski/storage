@@ -93,7 +93,7 @@ class Client:
                             self.socket.send(download_command.encode())
 
                         file_size = int(self.socket.recv(1024).decode())
-                        self.socket.send(b"ACK")
+                        self.socket.send(b"OK")
 
                         received_data = b''
                         while len(received_data) < file_size:
