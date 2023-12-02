@@ -63,18 +63,24 @@ class Server:
             print('Upload requested.')
             client.send('Upload functionality to be implemented.\n'.encode())
 
-        elif cmd == 'download':
-            print('Download requested.')
-            client.send('Download functionality to be implemented.\n'.encode())
+        elif cmd.startswith('download,'):
+            _, file_to_download = cmd.split(',', 1)
+            file_to_download = file_to_download.strip()
+
+            if file_to_download in self.storage.files:
+                self.storage.download(file_to_download, client)
+            else:
+                print(f'{file_to_download} does not exist or cannot be downloaded')
+                client.send(f'Cannot download {file_to_download}. File not found.\n'.encode())
 
         elif cmd.startswith('delete,'):
             _, file_to_delete = cmd.split(',', 1)
             file_to_delete = file_to_delete.strip()
 
             if file_to_delete in self.storage.files:
-                self.storage.delete(file_to_delete)
-                print(f'{file_to_delete} removed successfully.')
-                client.send('Deleted {}.\n'.format(file_to_delete).encode())
+                delete_result = self.storage.delete(file_to_delete)
+                print(delete_result)
+                client.send(delete_result.encode())
             else:
                 print(f'{file_to_delete} does not exist or cannot be deleted')
                 client.send('Cannot delete {}. File not found.\n'.format(file_to_delete).encode())

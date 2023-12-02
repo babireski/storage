@@ -1,5 +1,7 @@
 import os
 
+from file import File
+
 class Storage:
     def __init__(self, path: str):
         if not os.path.exists(path):
@@ -20,8 +22,19 @@ class Storage:
             document.write(file.data)
         self.updateFileList()
 
-    def download(self, filename):
+    def download(self, filename, client):
         filepath = os.path.join(self.path, filename)
+        try:
+            with open(filepath, 'rb') as file:
+                file_data = file.read()
+                file_size = len(file_data)
+                client.send(str(file_size).encode())
+                client.recv(1024)
+                client.sendall(file_data)
+        except FileNotFoundError:
+            return f'The file {filename} does not exist in the repository.'
+        except Exception as e:
+            return f'Error occurred while downloading {filename}: {e}'
 
     def delete(self, filename):
         filepath = os.path.join(self.path, filename)

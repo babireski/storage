@@ -11,7 +11,7 @@ class File:
     def __eq__(self, other):
         return self.name == other.name and self.extension == other.extension
 
-    def send(filepath, client):
+    def send(self, filepath, client):
         with open(filepath, 'rb') as file:
             data = file.read(1024)
             while data:
@@ -19,7 +19,7 @@ class File:
                 data = file.read(1024)
         print("File sent successfully.")
 
-    def recv(filepath, client):
+    def recv(self, filepath, client):
         with open(filepath, 'wb') as file:
             data = client.recv(1024)
             while data:

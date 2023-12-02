@@ -1,8 +1,8 @@
 client:
-	@python ./src/application.py client
+	@python3 ./src/application.py client --port 40000
 
 server:
-	@python ./src/application.py server --path ../files
+	@python3 ./src/application.py server --port 40000
 
 setup:
 	@pip install -r requirements.txt
