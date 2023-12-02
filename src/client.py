@@ -26,15 +26,56 @@ class Client:
 
                 cmd = answers['command']
 
+                self.socket.send(cmd.encode('utf-8'))
+
                 if cmd == "exit":
-                    self.socket.send(cmd.encode())
+                    self.socket.send(cmd.encode('utf-8'))
                     break
 
-                self.socket.send(cmd.encode())
+                elif cmd == 'list':
+                    response = self.socket.recv(1024).decode('utf-8')
+                    if response == 'Directory empty.':
+                        print(response + '\n')
+                    else:
+                        print('Files:\n\t' + response.replace(',', '\n\t') + '\n')
 
-                if cmd != "exit":
-                    response = self.socket.recv(1024).decode()
-                    print(response)
+                elif cmd == "delete":
+                    while True:
+                        self.socket.send("list".encode('utf-8'))
+                        response = self.socket.recv(1024).decode()
+                        if (response == 'Directory empty.'):
+                            print(response + '\n')
+                            break
+                        filenames = response.split(',')
+                        filenames.append('Return')
+                        options = [inquirer.List('filename', message="Choose file to delete", choices=filenames)]
+                        answers = inquirer.prompt(options)
+
+                        if not answers:
+                            break
+
+                        option = answers['filename']
+
+                        if option == "Return":
+                            break
+                        else:
+                            delete_command = f"delete,{option}"
+                            self.socket.send(delete_command.encode())
+
+                        delete_response = self.socket.recv(1024).decode('utf-8')
+                        print(delete_response)
+
+                elif cmd == 'download':
+                    response = self.socket.recv(1024).decode('utf-8')
+                    print('download: ' + response)
+
+                elif cmd == 'upload':
+                    response = self.socket.recv(1024).decode('utf-8')
+                    print('upload: ' + response)
+
+                else:
+                    print('Option not reconized')
+                    break
 
         except ConnectionError:
             print("Connection lost.")

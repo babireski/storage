@@ -13,6 +13,9 @@ class Server:
     def __str__(self):
         return '{}:{}'.format(self.host, self.port)
 
+    def getFileList(self):
+        return self.storage.files
+
     def start(self):
         try:
             self.socket.bind((self.host, self.port))
@@ -34,7 +37,7 @@ class Server:
     def handle_client(self, client_socket):
         try:
             while True:
-                cmd = client_socket.recv(1024).decode()
+                cmd = client_socket.recv(1024).decode('utf-8')
 
                 if not cmd or cmd == "exit":
                     print(f"Client {client_socket.getpeername()} requested to close the connection.")
@@ -53,22 +56,34 @@ class Server:
     def execute_command(self, client, cmd):
         if cmd == "list":
             print('List requested.')
-            client.send(self.storage.list().encode())
+            if self.getFileList():
+                files_list = ','.join(self.getFileList())
+                client.send(files_list.encode('utf-8'))
+            else:
+                client.send('Directory empty.'.encode('utf-8'))
 
         elif cmd == "upload":
             print('Upload requested.')
-            client.send('Upload functionality to be implemented.\n'.encode())
+            client.send('Upload functionality to be implemented.\n'.encode('utf-8'))
             pass
 
         elif cmd == "download":
             print('Download requested.')
-            client.send('Download functionality to be implemented\n.'.encode())
+            client.send('Download functionality to be implemented.\n'.encode('utf-8'))
             pass
 
-        elif cmd == "delete":
-            print('Delete requested.')
-            client.send('Delete functionality to be implemented.\n'.encode())
-            pass
+        elif cmd.startswith("delete,"):
+            _, file_to_delete = cmd.split(",", 1)
+            file_to_delete = file_to_delete.strip()
+
+            if file_to_delete in self.getFileList():
+                self.storage.delete(file_to_delete)
+                print(f'{file_to_delete} removed successfully.')
+                client.send(f'Deleted {file_to_delete}.\n'.encode())
+            else:
+                print(f'{file_to_delete} does not exist or cannot be deleted')
+                client.send(f'Cannot delete {file_to_delete}. File not found.\n'.encode())
+
 
     def stop(self):
         self.socket.close()

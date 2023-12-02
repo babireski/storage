@@ -12,26 +12,24 @@ class Storage:
         self.files = os.listdir(self.path)
 
     def list(self):
-        if self.files:
-            return '\n'.join(self.files) + '\n'
-        return 'Storage is empty.\n'
+        return self.files
 
     def upload(self, file):
         filepath = os.path.join(self.path, file.name + '.' + file.extension) if file.extension else os.path.join(self.path, file.name)
         with open(filepath, 'wb') as document:
             document.write(file.data)
-        self.update_file_list()
+        self.updateFileList()
 
-    def download():
+    def download(self):
         pass
 
     def delete(self, filename):
         filepath = os.path.join(self.path, filename)
         try:
             os.remove(filepath)
-            self.update_file_list()
-            return 'File {} removed successfully.'.format(filename)
+            self.updateFileList()
+            return f'File {filename} removed successfully.'
         except FileNotFoundError:
-            return 'The file {} does not exist in the repository.'.format(filename)
+            return f'The file {filename} does not exist in the repository.'
         except Exception as e:
-            return 'Error occurred while deleting {}: {}'.format(filename, e)
+            return f'Error occurred while deleting {filename}: {e}'
