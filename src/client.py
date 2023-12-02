@@ -26,14 +26,14 @@ class Client:
 
                 cmd = answers['command']
 
-                self.socket.send(cmd.encode('utf-8'))
+                self.socket.send(cmd.encode())
 
                 if cmd == "exit":
-                    self.socket.send(cmd.encode('utf-8'))
+                    self.socket.send(cmd.encode())
                     break
 
                 elif cmd == 'list':
-                    response = self.socket.recv(1024).decode('utf-8')
+                    response = self.socket.recv(1024).decode()
                     if response == 'Directory empty.':
                         print(response + '\n')
                     else:
@@ -41,14 +41,14 @@ class Client:
 
                 elif cmd == "delete":
                     while True:
-                        self.socket.send("list".encode('utf-8'))
+                        self.socket.send("list".encode())
                         response = self.socket.recv(1024).decode()
-                        if (response == 'Directory empty.'):
+                        if response == 'Directory empty.':
                             print(response + '\n')
                             break
                         filenames = response.split(',')
                         filenames.append('Return')
-                        options = [inquirer.List('filename', message="Choose file to delete", choices=filenames)]
+                        options = [inquirer.List('filename', message = "Choose file to delete", choices = filenames)]
                         answers = inquirer.prompt(options)
 
                         if not answers:
@@ -62,15 +62,15 @@ class Client:
                             delete_command = f"delete,{option}"
                             self.socket.send(delete_command.encode())
 
-                        delete_response = self.socket.recv(1024).decode('utf-8')
+                        delete_response = self.socket.recv(1024).decode()
                         print(delete_response)
 
                 elif cmd == 'download':
-                    response = self.socket.recv(1024).decode('utf-8')
+                    response = self.socket.recv(1024).decode()
                     print('download: ' + response)
 
                 elif cmd == 'upload':
-                    response = self.socket.recv(1024).decode('utf-8')
+                    response = self.socket.recv(1024).decode()
                     print('upload: ' + response)
 
                 else:

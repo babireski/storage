@@ -20,8 +20,8 @@ class Storage:
             document.write(file.data)
         self.updateFileList()
 
-    def download(self):
-        pass
+    def download(self, filename):
+        filepath = os.path.join(self.path, filename)
 
     def delete(self, filename):
         filepath = os.path.join(self.path, filename)

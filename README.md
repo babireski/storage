@@ -21,5 +21,8 @@
 
 # Tasklist
 
-+ [ ] Authentication
++ [ ] Cross-network connection
++ [ ] Subdirectories
++ [ ] Tree listing
 + [ ] Logging
++ [ ] Authentication
