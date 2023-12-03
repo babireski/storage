@@ -1,5 +1,4 @@
 import typer
-import os
 
 from client import Client
 from server import Server
