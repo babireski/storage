@@ -40,7 +40,7 @@ class Client:
                     if response == 'Directory empty.':
                         print(response + '\n')
                     else:
-                        print('Files:\n\t' + response.replace(',', '\n\t') + '\n')
+                        print('Files:\n    ' + response.replace(',', '\n    ') + '\n')
 
                 elif cmd == "delete":
                     while True:
@@ -112,8 +112,25 @@ class Client:
                             break
 
                 elif cmd == 'upload':
-                    response = self.socket.recv(4096).decode()
-                    print('upload: ' + response)
+                    file_path = input("Enter the path of the file: ")
+
+                    try:
+                        self.socket.send('upload'.encode())
+                        with open(file_path, 'rb') as file:
+                            file_data = file.read()
+                            file_size = len(file_data)
+                            file_info = f"{os.path.basename(file_path)},{file_size}"
+                            self.socket.send(file_info.encode())
+                            response = self.socket.recv(1024).decode()
+
+                            if response.startswith('Ready'):
+                                self.socket.sendall(file_data)
+                                response = self.socket.recv(1024).decode()
+                                print(response)
+                            else:
+                                print(response)
+                    except FileNotFoundError:
+                        print("File not found.")
 
                 else:
                     print('Option not reconized')

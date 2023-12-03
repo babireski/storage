@@ -61,9 +61,23 @@ class Server:
 
         elif cmd == 'upload':
             print('Upload requested.')
-            client.send('Upload functionality to be implemented.\n'.encode())
+            client.send('Ready to receive file. Send file details (name.extension,size)'.encode())
+            file_details = client.recv(1024).decode()
+            file_info = file_details.split(',')
+            file_name, file_size = file_info[0], int(file_info[1])
+
+            file_data = b''
+            while len(file_data) < file_size:
+                chunk = client.recv(4096)
+                if not chunk:
+                    break
+                file_data += chunk
+
+            upload_result = self.storage.upload(file_name, file_data)
+            client.send(upload_result.encode())
 
         elif cmd.startswith('download,'):
+            print('Download requested.')
             _, file_to_download = cmd.split(',', 1)
             file_to_download = file_to_download.strip()
 
@@ -74,6 +88,7 @@ class Server:
                 client.send(f'Cannot download {file_to_download}. File not found.\n'.encode())
 
         elif cmd.startswith('delete,'):
+            print('Delete requested.')
             _, file_to_delete = cmd.split(',', 1)
             file_to_delete = file_to_delete.strip()
 

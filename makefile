@@ -1,11 +1,11 @@
 client:
-	@python3 ./src/application.py client --port 40000
+	@python3 ./src/application.py client
 
 server:
-	@python3 ./src/application.py server --port 40000
+	@python3 ./src/application.py server
 
 setup:
-	@pip install -r requirements.txt
+	@pip3 install -r requirements.txt
 
 clean:
 	@rm -rf ./src/__pycache__

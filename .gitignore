@@ -2,8 +2,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
 
 .vscode/
-server-data/
-client-data/
+server-test-data/
+client-test-data/
+.DS_Store
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

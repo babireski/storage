@@ -1,7 +1,5 @@
 import os
 
-from file import File
-
 class Storage:
     def __init__(self, path: str):
         if not os.path.exists(path):
@@ -16,11 +14,15 @@ class Storage:
     def list(self):
         return self.files
 
-    def upload(self, file):
-        filepath = os.path.join(self.path, file.name + '.' + file.extension) if file.extension else os.path.join(self.path, file.name)
-        with open(filepath, 'wb') as document:
-            document.write(file.data)
-        self.updateFileList()
+    def upload(self, filename, file_data):
+        try:
+            filepath = os.path.join(self.path, filename)
+            with open(filepath, 'wb') as file:
+                file.write(file_data)
+            self.updateFileList()
+            return f'{filename} uploaded successfully.'
+        except Exception as e:
+            return f'Error occurred while uploading {filename}: {e}'
 
     def download(self, filename, client):
         filepath = os.path.join(self.path, filename)
