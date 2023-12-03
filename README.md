@@ -1,16 +1,18 @@
 # Introduction
 
+A simple replicated data repository made in Python. 
+
 # Installing
 
-# Commands
+# Usage
 
 + `client`: run application as client
-    + `--address` or `-a`: connect by address
+    + `--address [address]` or `-a [address]`: connect by address
     + `--find` or `-f`: search for online servers locally
 + `server`: run application as server
-    + `--path` or `-p`: set storage path
+    + `--path [path]` or `-p [path]`: set storage path (default is `./`)
 
-# Documentation
+# Commands
 
 + `delete [file]`
 + `download [file] [folder]`

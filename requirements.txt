@@ -1,2 +1,3 @@
 inquirer
+pyinstaller
 typer

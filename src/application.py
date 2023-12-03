@@ -5,12 +5,12 @@ from client import Client
 application = typer.Typer()
 
 @application.command()
-def server(host : str = '127.0.0.1', port : int = 50000, path : str = 'server-test-data/'):
+def server(host : str = '127.0.0.1', port : int = 50000, path : str = './'):
     server = Server(host, port, path)
     server.start()
 
 @application.command()
-def client(host : str = '127.0.0.1', port : int = 50000, path : str = 'client-test-data/'):
+def client(host : str = '127.0.0.1', port : int = 50000, path : str = './'):
     client = Client(host, port, path)
     client.connect()
 
