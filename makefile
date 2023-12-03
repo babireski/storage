@@ -14,3 +14,6 @@ build:
 	@pyinstaller --distpath ./bin/ --name storage --onefile ./src/application.py
 	@rm -rf ./build
 	@rm storage.spec
+
+install:
+	@sudo install ./bin/storage /usr/bin/
