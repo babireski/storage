@@ -1,18 +1,21 @@
 import typer
-from server import Server
+import os
+
 from client import Client
+from server import Server
+from typing import Optional
 
 application = typer.Typer()
 
 @application.command()
-def server(host : str = '127.0.0.1', port : int = 50000, path : str = './'):
-    server = Server(host, port, path)
-    server.start()
+def client(host : Optional[str] = '127.0.0.1', port : Optional[int] = 50000, folder : Optional[str] = './'):
+    client = Client(host, port, folder)
+    client.connect()
 
 @application.command()
-def client(host : str = '127.0.0.1', port : int = 50000, path : str = './'):
-    client = Client(host, port, path)
-    client.connect()
+def server(host : Optional[str] = '127.0.0.1', port : Optional[int] = 50000, folder : Optional[str] = './'):
+    server = Server(host, port, folder)
+    server.start()
 
 if __name__ == "__main__":
     application()
