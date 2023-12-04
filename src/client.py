@@ -4,11 +4,11 @@ import inquirer
 from storage import Storage
 
 class Client:
-    def __init__(self, host: str, port: int, path: str):
+    def __init__(self, host, port, path):
         self.host = host
         self.port = port
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.path = path
+        self.path = os.path.join(os.getcwd(), path)
         self.storage = Storage(self.path)
 
     def connect(self):
@@ -50,7 +50,7 @@ class Client:
                             print(response + '\n')
                             break
                         filenames = response.split(',')
-                        filenames.append('Return')
+                        filenames.append('Return to main menu')
                         options = [inquirer.List('filename', message = "Choose file to delete", choices = filenames)]
                         answers = inquirer.prompt(options)
 
@@ -59,7 +59,7 @@ class Client:
 
                         option = answers['filename']
 
-                        if option == "Return":
+                        if option == "Return to main menu":
                             break
                         else:
                             delete_command = f"delete,{option}"
@@ -77,7 +77,7 @@ class Client:
                             print(response + '\n')
                             break
                         filenames = response.split(',')
-                        filenames.append('Return')
+                        filenames.append('Return to main menu')
                         options = [inquirer.List('filename', message="Choose file to download", choices=filenames)]
                         answers = inquirer.prompt(options)
 
@@ -86,7 +86,7 @@ class Client:
 
                         option = answers['filename']
 
-                        if option == "Return":
+                        if option == "Return to main menu":
                             break
                         else:
                             download_command = f"download,{option}"
@@ -112,26 +112,69 @@ class Client:
                             break
 
                 elif cmd == 'upload':
-                    file_path = input("Enter the path of the file: ")
+                    while True:
+                        file_path = self.path
+                        choices = ['Enter path of the file', 'Navigate through directories', 'Return to main menu']
+                        options = [inquirer.List('path', message="Choose file to upload", choices=choices)]
+                        answers = inquirer.prompt(options)
 
-                    try:
-                        self.socket.send('upload'.encode())
-                        with open(file_path, 'rb') as file:
-                            file_data = file.read()
-                            file_size = len(file_data)
-                            file_info = f"{os.path.basename(file_path)},{file_size}"
-                            self.socket.send(file_info.encode())
-                            response = self.socket.recv(1024).decode()
+                        if not answers:
+                            break
 
-                            if response.startswith('Ready'):
-                                self.socket.sendall(file_data)
-                                response = self.socket.recv(1024).decode()
-                                print(response)
-                            else:
-                                print(response)
-                    except FileNotFoundError:
-                        print("File not found.")
+                        selected_option = answers['path']
+                        if selected_option == choices[0]:
+                            file_path = input("Enter the path of the file: ")
+                        elif selected_option == choices[-1]:
+                            break
+                        else:
+                            while True:
+                                if not os.path.exists(file_path):
+                                    print("Directory doesn't exist.")
+                                    break
 
+                                current_contents = os.listdir(file_path)
+                                current_contents.insert(0, '..')
+                                current_contents.append('Return to main menu')
+                                options = [inquirer.List('path', message='Choose dir or file', choices=current_contents)]
+                                answer = inquirer.prompt(options)
+
+                                if not answer:
+                                    break
+
+                                selected_path = answer['path']
+
+                                if selected_path == '..':
+                                    if file_path != '/':
+                                        file_path = os.path.dirname(file_path)
+                                else:
+                                    new_path = os.path.join(file_path, selected_path)
+
+                                    if os.path.isdir(new_path):
+                                        file_path = new_path
+                                    else:
+                                        file_path = new_path
+                                        break
+                        if file_path != self.path and selected_option != choices[-1] and os.path.exists(file_path):
+                            try:
+                                self.socket.send('upload'.encode())
+                                with open(file_path, 'rb') as file:
+                                    file_data = file.read()
+                                    file_size = len(file_data)
+                                    file_info = f"{os.path.basename(file_path)},{file_size}"
+                                    self.socket.send(file_info.encode())
+                                    response = self.socket.recv(1024).decode()
+
+                                    if response.startswith('Ready'):
+                                        self.socket.sendall(file_data)
+                                        response = self.socket.recv(1024).decode()
+                                        print(response)
+                                    else:
+                                        print(response)
+                                break
+                            except FileNotFoundError:
+                                print("File not found.")
+                        else:
+                            break
                 else:
                     print('Option not reconized')
                     break

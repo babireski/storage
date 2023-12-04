@@ -7,13 +7,13 @@ from typing import Optional
 application = typer.Typer()
 
 @application.command()
-def client(host : Optional[str] = '127.0.0.1', port : Optional[int] = 50000, folder : Optional[str] = './'):
-    client = Client(host, port, folder)
+def client(host : Optional[str] = '0.0.0.0', port : Optional[int] = 50000, path : Optional[str] = './'):
+    client = Client(host, port, path)
     client.connect()
 
 @application.command()
-def server(host : Optional[str] = '127.0.0.1', port : Optional[int] = 50000, folder : Optional[str] = './'):
-    server = Server(host, port, folder)
+def server(host : Optional[str] = '0.0.0.0', port : Optional[int] = 50000, path : Optional[str] = './'):
+    server = Server(host, port, path)
     server.start()
 
 if __name__ == "__main__":

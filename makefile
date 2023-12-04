@@ -1,11 +1,14 @@
+PYTHON = python
+PIP = pip
+
 client:
-	@python ./src/application.py client
+	@$(PYTHON) ./src/application.py client --path client-test-data
 
 server:
-	@python ./src/application.py server
+	@$(PYTHON) ./src/application.py server --path server-test-data
 
 setup:
-	@pip install -r requirements.txt
+	@$(PIP) install -r requirements.txt
 
 clean:
 	@rm -rf ./src/__pycache__

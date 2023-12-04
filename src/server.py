@@ -21,12 +21,12 @@ class Server:
 
             while True:
                 client_socket, client_address = self.socket.accept()
-                print('Connection established with {}'.format(client_address))
+                print('Connection established with {}.'.format(client_address))
 
                 thread = threading.Thread(target = self.handle_client, args = (client_socket,))
                 thread.start()
 
-                self.connections.append(thread)
+                self.connections.append((thread, client_socket))
 
         except socket.error as error:
             print('Failed to start the server: ', error)
@@ -49,6 +49,11 @@ class Server:
         finally:
             if client_socket.fileno() != -1:
                 client_socket.close()
+
+        for index, (_, sock) in enumerate(self.connections):
+            if sock == client_socket:
+                del self.connections[index]
+                break
 
     def execute_command(self, client, cmd):
         if cmd == 'list':
