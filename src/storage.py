@@ -1,12 +1,13 @@
 import os
+import watcher
 
 class Storage:
     def __init__(self, path: str):
         if not os.path.exists(path):
             os.makedirs(path)
-
         self.path = path
         self.updateFileList()
+        watcher.watch(self)
 
     def updateFileList(self):
         self.files = os.listdir(self.path)
