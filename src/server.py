@@ -21,7 +21,7 @@ class Server:
 
             while True:
                 client_socket, client_address = self.socket.accept()
-                print('Connection established with {}.'.format(client_address))
+                # print('Connection established with {}.'.format(client_address))
 
                 thread = threading.Thread(target = self.handle_client, args = (client_socket,))
                 thread.start()
@@ -37,7 +37,7 @@ class Server:
                 cmd = client_socket.recv(1024).decode()
 
                 if not cmd or cmd == 'exit':
-                    print('Client {} requested to close the connection.'.format(client_socket.getpeername()))
+                    # print('Client {} requested to close the connection.'.format(client_socket.getpeername()))
                     break
 
                 self.execute_command(client_socket, cmd)
@@ -82,7 +82,7 @@ class Server:
             client.send(upload_result.encode())
 
         elif cmd.startswith('download,'):
-            print('Download requested.')
+            # print('Download requested.')
             _, file_to_download = cmd.split(',', 1)
             file_to_download = file_to_download.strip()
 

@@ -4,6 +4,7 @@
 .vscode/
 server-test-data/
 client-test-data/
+stg/
 .DS_Store
 ### Python ###
 # Byte-compiled / optimized / DLL files

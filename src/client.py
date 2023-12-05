@@ -10,14 +10,18 @@ class Client:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.path = os.path.join(os.getcwd(), path)
         self.storage = Storage(self.path)
+        self.connected = False
 
-    def connect(self):
-        try:
-            self.socket.connect((self.host, self.port))
-            print(f"Connected to server at {self.host}:{self.port}")
-            self.start_interaction()
-        except ConnectionRefusedError:
-            print("Connection refused. Make sure the server is running.")
+    def connect(self, interaction = True):
+        if not self.connected:
+            try:
+                self.socket.connect((self.host, self.port))
+                self.connected = True
+                # print(f"Connected to server at {self.host}:{self.port}")
+                if interaction:
+                    self.start_interaction()
+            except ConnectionRefusedError:
+                print("Connection refused. Make sure the server is running.")
 
     def start_interaction(self):
         try:

@@ -7,7 +7,7 @@ class Storage:
             os.makedirs(path)
         self.path = path
         self.updateFileList()
-        watcher.watch(self)
+        # watcher.watch(self)
 
     def updateFileList(self):
         self.files = os.listdir(self.path)

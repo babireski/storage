@@ -5,7 +5,7 @@ client:
 	@$(PYTHON) ./src/application.py client --path client-test-data
 
 server:
-	@$(PYTHON) ./src/application.py server --path server-test-data
+	@$(PYTHON) ./src/application.py server --path stg
 
 setup:
 	@$(PIP) install -r requirements.txt
@@ -20,3 +20,6 @@ build:
 
 install:
 	@sudo install ./bin/storage /usr/bin/
+
+test:
+	@$(PYTHON) ./src/tester.py
