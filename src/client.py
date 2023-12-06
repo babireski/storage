@@ -17,7 +17,7 @@ class Client:
             try:
                 self.socket.connect((self.host, self.port))
                 self.connected = True
-                # print(f"Connected to server at {self.host}:{self.port}")
+                print(f"Connected to server at {self.host}:{self.port}")
                 if interaction:
                     self.start_interaction()
             except ConnectionRefusedError:
