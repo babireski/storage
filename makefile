@@ -2,7 +2,7 @@ PYTHON = python
 PIP = pip
 
 client:
-	@$(PYTHON) ./src/application.py client --path client-test-data
+	@$(PYTHON) ./src/application.py client --path client-test-data --host 192.168.15.20
 
 server:
 	@$(PYTHON) ./src/application.py server --path stg

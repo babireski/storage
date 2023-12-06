@@ -1,4 +1,3 @@
-import application
 from client import Client
 import threading
 import os
@@ -32,28 +31,28 @@ def download(client, barrier):
     performance.append(int((time.time() - start) * 1000))
 
 def graphic():
-	if os.path.exists(f"out") == False:
-		os.makedirs(f"out")
-	with open("out/performance.csv", "r") as spreadsheet:
-		reader = csv.DictReader(spreadsheet)
-		data = {field: [] for field in reader.fieldnames}
-		for row in reader:
-			for field in reader.fieldnames:
-				if field != 'Threads':
-					data[field].append(float(row[field]))
-		if "Threads" in data:
-			if any(data.values()):
-				plt.plot(data["Time"], label='Time', color='b')
-				plt.title(f'Performance for {downloads} downloads')
-				plt.xlabel('Threads')
-				plt.ylabel('Time in ms')
-				plt.legend()
-				plt.savefig(f"out/performance.png")
-				plt.close()
-			else:
-				print(f"No data available in performance.csv")
-		else:
-			print(f"Missing 'Time' data in performance.csv")
+    if os.path.exists(f"out") == False:
+        os.makedirs(f"out")
+    with open("out/performance.csv", "r") as spreadsheet:
+        reader = csv.DictReader(spreadsheet)
+        data = {field: [] for field in reader.fieldnames}
+        for row in reader:
+            for field in reader.fieldnames:
+                if field != 'Threads':
+                    data[field].append(float(row[field]))
+        if "Threads" in data:
+            if any(data.values()):
+                plt.plot(data["Time"], label='Time', color='b')
+                plt.title(f'Performance for {downloads} downloads')
+                plt.xlabel('Threads')
+                plt.ylabel('Time in ms')
+                plt.legend()
+                plt.savefig(f"out/performance.png")
+                plt.close()
+            else:
+                print(f"No data available in performance.csv")
+        else:
+            print(f"Missing 'Time' data in performance.csv")
 
 def start():
     global performance
@@ -61,7 +60,7 @@ def start():
         print('Threads,Time', file=spreadsheet)
         for n in range(connections):
             barrier = threading.Barrier(n + 1)
-            client = Client('0.0.0.0', 50000, './client-test-data/{}'.format(n + 1))
+            client = Client('192.168.15.20', 50000, './client-test-data/{}'.format(n + 1))
             client.connect(interaction=False)
             clients.append(client)
             threads = []
