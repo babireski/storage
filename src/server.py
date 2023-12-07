@@ -82,7 +82,7 @@ class Server:
             client.send(upload_result.encode())
 
         elif cmd.startswith('download,'):
-            # print('Download requested.')
+            print('Download requested.')
             _, file_to_download = cmd.split(',', 1)
             file_to_download = file_to_download.strip()
 
