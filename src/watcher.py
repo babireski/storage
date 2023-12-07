@@ -6,7 +6,7 @@ class Handler(FileSystemEventHandler):
         self.storage = storage
 
     def on_any_event(self, event):
-        self.storage.updateFileList()
+        self.storage.update()
 
 def watch(storage):
     handler = Handler(storage)
