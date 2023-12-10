@@ -2,7 +2,8 @@ import os
 
 class Filesystem:
     def __init__(self, path):
-        self.path = path
+        path = path
+        walk = os.walk(path)
         fork = '├── '
         last = '└── '
         more = '│   '
