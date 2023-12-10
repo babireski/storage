@@ -82,7 +82,7 @@ class Server:
             client.send(upload_result.encode())
 
         elif cmd.startswith('download,'):
-            # print('Download requested.')
+            print('Download requested.')
             _, file_to_download = cmd.split(',', 1)
             file_to_download = file_to_download.strip()
 
@@ -94,16 +94,27 @@ class Server:
 
         elif cmd.startswith('delete,'):
             print('Delete requested.')
-            _, file_to_delete = cmd.split(',', 1)
-            file_to_delete = file_to_delete.strip()
+            _, fileToDelete = cmd.split(',', 1)
+            fileToDelete = fileToDelete.strip()
+            outputMessage = ''
 
-            if file_to_delete in self.storage.files:
-                delete_result = self.storage.delete(file_to_delete)
-                print(delete_result)
-                client.send(delete_result.encode())
-            else:
-                print(f'{file_to_delete} does not exist or cannot be deleted')
-                client.send('Cannot delete {}. File not found.\n'.format(file_to_delete).encode())
+            try:
+                if fileToDelete in self.storage.files:
+                    delete_result = self.storage.delete(fileToDelete)
+                    if delete_result:
+                        outputMessage = 'Success.'
+                else:
+                    outputMessage = 'Error.File not found.'
+                print(outputMessage)
+                client.send(outputMessage.encode())
+            except FileNotFoundError:
+                outputMessage = 'Error.File not found.'
+                print(outputMessage)
+                client.send(outputMessage.encode())
+            except Exception as e:
+                outputMessage = f'Error.{str(e)}'
+                print(outputMessage)
+                client.send(outputMessage.encode())
 
     def stop(self):
         self.socket.close()

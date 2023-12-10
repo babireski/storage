@@ -7,7 +7,7 @@ class Storage:
             os.makedirs(path)
         self.path = path
         self.updateFileList()
-        # watcher.watch(self)
+        watcher.watch(self)
 
     def updateFileList(self):
         self.files = os.listdir(self.path)
@@ -39,13 +39,13 @@ class Storage:
         except Exception as e:
             return f'Error occurred while downloading {filename}: {e}'
 
-    def delete(self, filename):
+    def delete(self, filename) -> bool:
         filepath = os.path.join(self.path, filename)
         try:
             os.remove(filepath)
             self.updateFileList()
-            return f'File {filename} removed successfully.'
+            return True
         except FileNotFoundError:
-            return f'The file {filename} does not exist in the repository.'
+            raise FileNotFoundError
         except Exception as e:
-            return f'Error occurred while deleting {filename}: {e}'
+            raise e

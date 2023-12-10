@@ -1,6 +1,6 @@
 class Filesystem:
     def __init__(self, path):
-        path = path
+        self.path = path
         fork = '├── '
         last = '└── '
         more = '│   '

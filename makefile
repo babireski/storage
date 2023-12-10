@@ -2,10 +2,10 @@ PYTHON = python
 PIP = pip
 
 client:
-	@$(PYTHON) ./src/application.py client --path client-test-data --host 192.168.15.20
+	@$(PYTHON) ./src/application.py client
 
 server:
-	@$(PYTHON) ./src/application.py server --path stg
+	@$(PYTHON) ./src/application.py server
 
 setup:
 	@$(PIP) install -r requirements.txt
