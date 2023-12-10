@@ -3,12 +3,13 @@ import threading
 from storage import Storage
 
 class Server:
-    def __init__(self, host, port, path):
+    def __init__(self, host, port, path, log = 'log'):
         self.host = host
         self.port = port
         self.storage = Storage(path)
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connections = []
+        self.log = log
 
     def __str__(self):
         return '{}:{}'.format(self.host, self.port)
@@ -39,7 +40,6 @@ class Server:
                 if not cmd or cmd == 'exit':
                     print('Client {} requested to close the connection.'.format(client_socket.getpeername()))
                     break
-
                 self.execute_command(client_socket, cmd)
 
         except ConnectionResetError:

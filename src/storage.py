@@ -6,21 +6,21 @@ class Storage:
         if not os.path.exists(path):
             os.makedirs(path)
         self.path = path
-        self.updateFileList()
+        self.update()
         watcher.watch(self)
 
-    def updateFileList(self):
+    def update(self):
         self.files = os.listdir(self.path)
 
     def list(self):
         return self.files
 
-    def upload(self, filename, file_data):
+    def upload(self, filename, filedata):
         try:
             filepath = os.path.join(self.path, filename)
             with open(filepath, 'wb') as file:
-                file.write(file_data)
-            self.updateFileList()
+                file.write(filedata)
+            self.update()
             return f'{filename} uploaded successfully.'
         except Exception as e:
             return f'Error occurred while uploading {filename}: {e}'
@@ -43,7 +43,7 @@ class Storage:
         filepath = os.path.join(self.path, filename)
         try:
             os.remove(filepath)
-            self.updateFileList()
+            self.update()
             return True
         except FileNotFoundError:
             raise FileNotFoundError
