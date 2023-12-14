@@ -68,7 +68,23 @@ class Client:
             return f"{os.path.basename(save_path)} downloaded and saved successfully at {pathToSave}."
 
     def upload(self, basename):
-        pass
+        try:
+            self.socket.send('upload'.encode())
+            with open(basename, 'rb') as file:
+                file_data = file.read()
+                file_size = len(file_data)
+                file_info = f"{os.path.basename(basename)},{file_size}"
+                self.socket.send(file_info.encode())
+                response = self.socket.recv(1024).decode()
+
+                if response.startswith('Ready'):
+                    self.socket.sendall(file_data)
+                    response = self.socket.recv(1024).decode()
+                    return response
+                else:
+                    return response
+        except FileNotFoundError:
+            return "File not found."
 
     def list(self) -> list[str]:
         self.socket.send(Command.LIST.value.encode())
@@ -91,11 +107,10 @@ class Client:
     def start_interaction(self) -> None:
         try:
             while True:
-                availableCommands = [Command.LIST.value, Command.UPLOAD.value, Command.DOWNLOAD.value, Command.DELETE.value, Command.EXIT.value]
-                # if self.list():
-                # 	availableCommands = [Command.LIST.value, Command.UPLOAD.value, Command.DOWNLOAD.value, Command.DELETE.value, Command.EXIT.value]
-                # else:
-                # 	availableCommands = [Command.UPLOAD.value, Command.EXIT.value]
+                if self.list():
+                    availableCommands = [Command.LIST.value, Command.UPLOAD.value, Command.DOWNLOAD.value, Command.DELETE.value, Command.EXIT.value]
+                else:
+                    availableCommands = [Command.UPLOAD.value, Command.EXIT.value]
                 cmd = self._answer_inquirer('Command', 'Choose a command', availableCommands)
 
                 if cmd == Command.EXIT.value:
@@ -144,7 +159,7 @@ class Client:
                         if folderToSaveAnswer == folderOptions[-1]:
                             break
                         elif folderToSaveAnswer == folderOptions[0]:
-                            path = input()
+                            path = input("Enter the path where the file will be saved: ")
                             if os.path.exists(path):
                                 download = True
                         else:
@@ -177,69 +192,49 @@ class Client:
 
                 elif cmd == Command.UPLOAD.value:
                     while True:
+                        upload = False
+                        folderOptions = ['Enter path', 'Navigate through directories', 'Return to main menu']
+                        folderToSaveAnswer = self._answer_inquirer('Folder', "Choose the path of the file", folderOptions)
                         file_path = self.defaultPath
-                        choices = ['Enter path of the file', 'Navigate through directories', 'Return to main menu']
-                        options = [inquirer.List('path', message="Choose file to upload", choices=choices)]
-                        answers = inquirer.prompt(options)
-
-                        if not answers:
+                        if folderToSaveAnswer == folderOptions[-1]:
                             break
-
-                        selected_option = answers['path']
-                        if selected_option == choices[0]:
-                            file_path = input("Enter the path of the file: ")
-                        elif selected_option == choices[-1]:
-                            break
+                        elif folderToSaveAnswer == folderOptions[0]:
+                            file_path = input("Enter the path of the file you want to upload: ")
+                            if os.path.exists(file_path):
+                                upload = True
+                                break
                         else:
                             while True:
                                 if not os.path.exists(file_path):
                                     print("Directory doesn't exist.")
                                     break
 
-                                current_contents = os.listdir(file_path)
-                                current_contents.insert(0, '..')
-                                current_contents.insert(1, '.')
+                                current_contents = [item + '/' if os.path.isdir(os.path.join(file_path, item)) else item for item in os.listdir(file_path)]
+                                current_contents.insert(0, '.')
+                                current_contents.insert(1, '..')
                                 current_contents.append('Return to main menu')
-                                options = [inquirer.List('path', message='Choose dir or file', choices=current_contents)]
-                                answer = inquirer.prompt(options)
 
-                                if not answer:
-                                    break
+                                selected_path = self._answer_inquirer('Path', 'Choose directory to save the file. Select \'.\' to choose the actual dir to compact and send it; and \'..\' to go one directory above.', current_contents)
 
-                                selected_path = answer['path']
-
-                                if selected_path == '..':
+                                if selected_path == current_contents[1]:
                                     if file_path != '/':
                                         file_path = os.path.dirname(file_path)
+                                elif selected_path == current_contents[0]:
+                                    # add functionality to zip the folder
+                                    pass
+                                elif selected_path == current_contents[-1]:
+                                    break
                                 else:
                                     new_path = os.path.join(file_path, selected_path)
-
                                     if os.path.isdir(new_path):
                                         file_path = new_path
                                     else:
                                         file_path = new_path
+                                        upload = True
                                         break
-                        if file_path != self.defaultPath and selected_option != choices[-1] and os.path.exists(file_path):
-                            try:
-                                self.socket.send('upload'.encode())
-                                with open(file_path, 'rb') as file:
-                                    file_data = file.read()
-                                    file_size = len(file_data)
-                                    file_info = f"{os.path.basename(file_path)},{file_size}"
-                                    self.socket.send(file_info.encode())
-                                    response = self.socket.recv(1024).decode()
-
-                                    if response.startswith('Ready'):
-                                        self.socket.sendall(file_data)
-                                        response = self.socket.recv(1024).decode()
-                                        print(response)
-                                    else:
-                                        print(response)
-                                break
-                            except FileNotFoundError:
-                                print("File not found.")
-                        else:
-                            break
+                        if upload:
+                            print(self.upload(file_path))
+                        break
                 else:
                     print('Option not reconized')
 
